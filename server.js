@@ -1,13 +1,16 @@
 const puppeteer = require('puppeteer');
+const cors = require('cors');
 const express = require("express");
 const app = express();
 const PORT = 4000;
 
-// Set up Puppeteer options for running in Render.com
+const corsOptions = {
+    origin: true, // Allow all origins
+};
 const renderCloudConfig = {
   args: ['--no-sandbox', '--disable-setuid-sandbox'],
 };
-
+app.use(cors(corsOptions));
 // Utility function to handle common tasks related to logging in
 const login = async (page, username, password) => {
   // Navigate to the login page

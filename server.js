@@ -52,7 +52,7 @@ app.get("/submit", async (req, res) => {
   }
 });
 app.get("/ok", async (req, res) => {
-  return res.status(200).text("ok")
+  return res.status(200).send("ok")
 });
 app.listen(PORT, () => {
   console.log(`Server started`);

@@ -14,8 +14,8 @@ const login = async (page, username, password) => {
   await page.goto('https://github.com/login');
 
   // Fill in the form fields
-  await page.type('#login_field', username);
-  await page.type('#password', password);
+await page.type('#login_field', [username]);
+await page.type('#password', [password]);
 
   // Click the submit button
   await Promise.all([

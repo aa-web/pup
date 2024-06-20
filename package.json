@@ -6,7 +6,8 @@
     "chrome-remote-interface": "^0.26.1",
     "fs-extra": "^7.0.0",
     "puppeteer": "^1.7.0",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "@types/puppeteer": "^1.6.0"

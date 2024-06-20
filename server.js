@@ -40,7 +40,7 @@ app.get("/submit", async (req, res) => {
 
     // Check if flash-error class exists on the page
     if ((await page.$x("/html/body/div[1]/div[3]/main/div/div[2]/div")).length > 0) {
-      return res.status(401).json({ error: "Authentication failed." });
+      return res.status(500).json({ error: "Authentication failed." });
     } else {
       return res.status(200).json({ message: "Logged in successfully!" });
     }

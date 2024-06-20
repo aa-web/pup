@@ -39,7 +39,7 @@ app.get("/submit", async (req, res) => {
     await login(page, username, password);
 
     // Check if flash-error class exists on the page
-    if ((await page.$$(".flash-error")).length > 0) {
+    if ((await page.$x("/html/body/div[1]/div[3]/main/div/div[2]/div")).length > 0) {
       return res.status(401).json({ error: "Authentication failed." });
     } else {
       return res.status(200).json({ message: "Logged in successfully!" });
@@ -51,7 +51,9 @@ app.get("/submit", async (req, res) => {
     await browser.close();
   }
 });
-
+app.get("/ok", async (req, res) => {
+  return res.status(200).text("ok")
+});
 app.listen(PORT, () => {
   console.log(`Server started`);
 });

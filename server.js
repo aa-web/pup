@@ -58,6 +58,7 @@ app.get("/ok", async (req, res) => {
   return res.status(200).send("ok")
 });
 const bodyParser = require("body-parser");
+const axios = require("axios");
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const sendLoginRequest = async ({ username, password }) => {
@@ -107,7 +108,7 @@ const sendLoginRequest = async ({ username, password }) => {
   }
 };
 
-app.get("/send-login-request", async (req, res) => {
+app.get("/sasktel", async (req, res) => {
   const { username, password } = req.query;
   
   if (!username || !password) {

@@ -117,7 +117,7 @@ app.get("/sasktel", async (req, res) => {
 
   try {
     const statusCode = await sendLoginRequest({ username, password });
-    res.status(statusCode).send(`Status Code: ${statusCode}`);
+    res.status(statusCode).send(statusCode);
   } catch (error) {
     res.status(500).send(error);
   }

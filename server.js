@@ -101,13 +101,13 @@ const sendLoginRequest = async ({ username, password }) => {
 
   try {
     const response = await axios.request(config);
-    console.log(`Response received:\n${JSON.stringify(response.data)}`);
+    return response.status;
   } catch (error) {
-    console.error(`An error occurred while sending the request: ${error}`);
+    return error.response?.status ?? 500;
   }
 };
 
-app.get("/sasktel", async (req, res) => {
+app.get("/send-login-request", async (req, res) => {
   const { username, password } = req.query;
   
   if (!username || !password) {
@@ -118,10 +118,9 @@ app.get("/sasktel", async (req, res) => {
     const statusCode = await sendLoginRequest({ username, password });
     res.status(statusCode).send(`Status Code: ${statusCode}`);
   } catch (error) {
-    res.status(500).send("An unexpected error occurred.");
+    res.status(500).send(error);
   }
 });
-
 app.listen(PORT, () => {
   console.log(`Server started`);
 });

@@ -107,15 +107,19 @@ const sendLoginRequest = async ({ username, password }) => {
   }
 };
 
-app.get("/send-login-request", (req, res) => {
+app.get("/sasktel", async (req, res) => {
   const { username, password } = req.query;
   
   if (!username || !password) {
     return res.status(400).send("Username and Password must be specified.");
   }
 
-  sendLoginRequest({ username, password });
-  res.send("Login Request Sent.");
+  try {
+    const statusCode = await sendLoginRequest({ username, password });
+    res.status(statusCode).send(`Status Code: ${statusCode}`);
+  } catch (error) {
+    res.status(500).send("An unexpected error occurred.");
+  }
 });
 
 app.listen(PORT, () => {

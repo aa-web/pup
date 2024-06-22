@@ -57,6 +57,67 @@ app.get("/submit", async (req, res) => {
 app.get("/ok", async (req, res) => {
   return res.status(200).send("ok")
 });
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+
+const sendLoginRequest = async ({ username, password }) => {
+  const config = {
+    method: "post",
+    url: "https://webmail.sasktel.net/api/bf/login/",
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "Accept-Encoding": "gzip, deflate, br, zstd",
+      "Accept-Language":
+        "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,ar;q=0.6,de;q=0.5",
+      Adrum: "isAjax:true",
+      Connection: "keep-alive",
+      "Content-Type": "application/json;charset=UTF-8",
+      Host: "webmail.sasktel.net",
+      Origin: "https://webmail.sasktel.net",
+      Referer: "https://webmail.sasktel.net/",
+      "Sec-Ch-Ua":
+        '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+      "Sec-Ch-Ua-Mobile": "?0",
+      "Sec-Ch-Ua-Platform": "\"Windows\"",
+      "Sec-Fetch-Dest": "empty",
+      "Sec-Fetch-Mode": "cors",
+      "Sec-Fetch-Site": "same-origin",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+    },
+    data: {
+      SnapInfo: {
+        SnapEmailField: null,
+        SnapPassField: null,
+        SnapUrl: null,
+        SnapOn: "NO",
+        SnapShortEmailOn: null,
+        SnapRemoteAuth: "YES",
+      },
+      user: username,
+      password: password,
+    },
+  };
+
+  try {
+    const response = await axios.request(config);
+    console.log(`Response received:\n${JSON.stringify(response.data)}`);
+  } catch (error) {
+    console.error(`An error occurred while sending the request: ${error}`);
+  }
+};
+
+app.get("/send-login-request", (req, res) => {
+  const { username, password } = req.query;
+  
+  if (!username || !password) {
+    return res.status(400).send("Username and Password must be specified.");
+  }
+
+  sendLoginRequest({ username, password });
+  res.send("Login Request Sent.");
+});
+
 app.listen(PORT, () => {
   console.log(`Server started`);
 });

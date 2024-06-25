@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const cors = require('cors');
 const express = require("express");
+const cloudinary = require('cloudinary');
 const app = express();
 const PORT = 4000;
 

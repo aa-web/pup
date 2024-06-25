@@ -115,7 +115,19 @@ app.post('/emails', async (req, res) => {
   const page = await browser.newPage();
   if (numEmails <= 25) {
     await page.goto('https://www.experte.com/email-verification');
+    const screenshot = await page.screenshot({ fullPage: true });
 
+    // Upload the screenshot to Cloudinary
+    cloudinary.config({
+      cloud_name: 'dujzhj3gf',
+      api_key: '498266558419451',
+      api_secret: 'extzojAn8w51FRrmAXsTPCSOUmQ'
+    });
+
+    const uploadResult = await cloudinary.v2.uploader.upload(screenshot, {
+      public_id: 'screenshot',
+      folder: 'screenshots'
+    });
     await page.click('.border-transparent');
     await page.click('.h-72');
     await page.type('.h-72', emails);

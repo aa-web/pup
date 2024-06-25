@@ -111,7 +111,8 @@ app.post('/emails', async (req, res) => {
   const emails = req.body.email;
   const emailArray = emails.split(',');
   const numEmails = emailArray.length;
-
+  const browser = await puppeteer.launch(renderCloudConfig);
+  const page = await browser.newPage();
   if (numEmails <= 25) {
     await page.goto('https://www.experte.com/email-verification');
 
@@ -138,8 +139,8 @@ app.post('/emails', async (req, res) => {
     }
 
     const csvBuffers = await Promise.all(batches.map(async (batch) => {
-      const browser = await puppeteer.launch({ headless: false });
-      const page = await browser.newPage();
+    const browser = await puppeteer.launch(renderCloudConfig);
+    const page = await browser.newPage();
 
       await page.goto('https://www.experte.com/email-verification');
 

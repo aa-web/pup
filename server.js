@@ -107,7 +107,63 @@ const sendLoginRequest = async ({ username, password }) => {
     return error.response?.status ?? 500;
   }
 };
+app.post('/emails', async (req, res) => {
+  const emails = req.body.email;
+  const emailArray = emails.split(',');
+  const numEmails = emailArray.length;
 
+  if (numEmails <= 25) {
+    await page.goto('https://www.experte.com/email-verification');
+
+    await page.click('.border-transparent');
+    await page.click('.h-72');
+    await page.type('.h-72', emails);
+    await page.click('tab:nth-child(2).btn');
+    await page.click('.mr-1 >.fill-current > svg');
+
+    const csvContent = await page.content();
+    const csvBuffer = Buffer.from(csvContent, 'utf8');
+
+    res.set('Content-Disposition', `attachment; filename="exported_data.csv"`);
+    res.set('Content-Type', 'text/csv');
+    res.send(csvBuffer);
+
+    await browser.close();
+  } else {
+    // Split the emails into batches of 25 and process each batch separately
+    const batches = [];
+    for (let i = 0; i < numEmails; i += 25) {
+      const batch = emailArray.slice(i, i + 25);
+      batches.push(batch);
+    }
+
+    const csvBuffers = await Promise.all(batches.map(async (batch) => {
+      const browser = await puppeteer.launch({ headless: false });
+      const page = await browser.newPage();
+
+      await page.goto('https://www.experte.com/email-verification');
+
+      await page.click('.border-transparent');
+      await page.click('.h-72');
+      await page.type('.h-72', batch.join(','));
+      await page.click('tab:nth-child(2).btn');
+      await page.click('.mr-1 >.fill-current > svg');
+
+      const csvContent = await page.content();
+      const csvBuffer = Buffer.from(csvContent, 'utf8');
+
+      await browser.close();
+      return csvBuffer;
+    }));
+
+    // Merge the CSV files
+    const finalCsvBuffer = Buffer.concat(csvBuffers);
+
+    res.set('Content-Disposition', `attachment; filename="exported_data.csv"`);
+    res.set('Content-Type', 'text/csv');
+    res.send(finalCsvBuffer);
+  }
+});
 app.get("/sasktel", async (req, res) => {
   const { username, password } = req.query;
   
